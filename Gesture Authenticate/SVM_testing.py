@@ -21,7 +21,7 @@ def changeDataFormat():
  
 def SVMTesting():
     # load the model from disk
-    loaded_model = pickle.load(open(filename, 'rb'))
+    loaded_model = pickle.load(open('./model/SVM/' + filename, 'rb'))
     print(loaded_model)
     
     with open('./dataset/training/CSV/one_v1.csv', newline='') as csvfile:
