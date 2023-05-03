@@ -68,5 +68,5 @@ if __name__=="__main__":
     #getCroppedImg()
     #getCSVfile()
     
-    #getCSVfile_v1()
+    getCSVfile_v1()
 
