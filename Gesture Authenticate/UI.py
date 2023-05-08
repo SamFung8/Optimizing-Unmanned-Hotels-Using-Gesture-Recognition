@@ -25,6 +25,7 @@ app.geometry("1500x800")
 # quit app whenever pressed
 app.bind('<Escape>', lambda e: app.quit())
 
+
 # Create a label and display it on app
 w = Label(app, text="Gesture Authenticate", font=('Times 25'), pady=20)
 w.pack()
@@ -34,27 +35,27 @@ label_widget.pack(padx=20, fill='y', side='left')
 # Create a function to open camera and
 # display it in the label_widget on app
 def open_camera():
-	# Capture the video frame by frame
-	_, frame = vid.read()
-	hands, frame = detector.findHands(frame, flipType=False)
+	while True:
+		# Capture the video frame by frame
+		_, frame = vid.read()
+		hands, frame = detector.findHands(frame, flipType=False)
 
-	# Convert image from one color space to other
-	opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+		# Convert image from one color space to other
+		opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
 
-	# Capture the latest frame and transform to image
-	captured_image = Image.fromarray(opencv_image)
+		# Capture the latest frame and transform to image
+		captured_image = Image.fromarray(opencv_image)
 
-	# Convert captured image to photoimage
-	photo_image = ImageTk.PhotoImage(image=captured_image)
+		# Convert captured image to photoimage
+		photo_image = ImageTk.PhotoImage(image=captured_image)
 
-	# Displaying photoimage in the label
-	label_widget.photo_image = photo_image
+		# Displaying photoimage in the label
+		label_widget.photo_image = photo_image
 
-	# Configure image in the label
-	label_widget.configure(image=photo_image)
+		# Configure image in the label
+		label_widget.configure(image=photo_image)
 
-	# Repeat the same process after every 10 seconds
-	label_widget.after(1, open_camera)
+		app.update()
 
 
 # Create a button to open the camera in GUI app
