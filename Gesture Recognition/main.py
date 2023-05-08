@@ -6,8 +6,10 @@ import numpy as np
 import pyautogui
 import datetime
 import mouse
+import keyboard
 import cvzone
 import ButtonDesign as Button
+
 
 buttonController = []
 createButtonList = [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -41,7 +43,9 @@ wScreen, hScreen = pyautogui.size()
 detector = HandDetector(detectionCon=0.7, maxHands=1)
 
 # function for video streaming
-while True:
+def video_live():
+    global currentMode, changeModeCount, changeMouseClickCount
+
 
     success, img = cap.read()
     img = cv2.flip(img, 1)
@@ -150,5 +154,13 @@ while True:
                           (0, 0, 255), 2)
     displayFPS.update(img=showImg, pos=(20, 120))
 
-    cv2.imshow("Image", showImg)
-    cv2.waitKey(1)
+    return showImg
+
+
+if __name__ == "__main__":
+    while True:
+
+        showImg = video_live()
+
+        cv2.imshow("Image", showImg)
+        cv2.waitKey(1)
