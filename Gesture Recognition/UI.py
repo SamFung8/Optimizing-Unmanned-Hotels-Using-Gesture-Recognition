@@ -1,69 +1,59 @@
+from tkwebview2.tkwebview2 import WebView2, have_runtime, install_runtime
+from System.Threading import Thread, ApartmentState, ThreadStart
 from tkinter import *
 import cv2
 from PIL import Image, ImageTk
-from cvzone.HandTrackingModule import HandDetector
 import main as c
 
 
+def main():
+    root = Tk()
+    root.title('Chckin System')
+    root.geometry("1800x900")
 
-detector = HandDetector(detectionCon=0.7, maxHands=1)
+    frame2 = WebView2(root, 500, 500)
+    frame2.pack(side='right', padx=20, fill='both', expand=True)
+    frame2.load_url('https://google.com/')
 
-# Declare the width and height in variables
-width, height = 1000, 1200
-img_width, img_height = 1000, 800
+    app = WebView2(root, 500, 500)
+    app.pack(side='left')
 
+    label_widget = Label(app)
+    label_widget.pack(fill='y', side='left')
 
+    # Create a function to open camera and
+    # display it in the label_widget on app
+    def open_camera():
+        while True:
+            # Convert image from one color space to other
+            opencv_image = c.video_live()
+            opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGBA)
+            opencv_image = cv2.resize(opencv_image,
+                                      (int(opencv_image.shape[:2][1] * 0.65), int(opencv_image.shape[:2][0] * 0.65)))
 
-# Create a GUI app
-app = Tk()
+            # Capture the latest frame and transform to image
+            captured_image = Image.fromarray(opencv_image)
 
-# Set the size of the window
-app.geometry("1800x900")
+            # Convert captured image to photoimage
+            photo_image = ImageTk.PhotoImage(image=captured_image)
 
-# Bind the app with Escape keyboard to
-# quit app whenever pressed
-app.bind('<Escape>', lambda e: app.quit())
+            # Displaying photoimage in the label
+            label_widget.photo_image = photo_image
 
-# Create a label and display it on app
-w = Label(app, text="Checkin System", font=('Times 25'), pady=20)
-w.pack()
-label_widget = Label(app, width=img_width, height=img_height)
-label_widget.pack(padx=20, fill='y', side='left')
+            # Configure image in the label
+            label_widget.configure(image=photo_image)
 
-# Create a function to open camera and
-# display it in the label_widget on app
-def open_camera():
+            app.update()
 
-	while True:
-		# Convert image from one color space to other
-		opencv_image = c.video_live()
-		opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGBA)
-		opencv_image = cv2.resize(opencv_image, (int(opencv_image.shape[:2][1] * 0.85), int(opencv_image.shape[:2][0] * 0.85)))
+    # Create a button to open the camera in GUI app
+    open_camera()
 
-		# Capture the latest frame and transform to image
-		captured_image = Image.fromarray(opencv_image)
-
-		# Convert captured image to photoimage
-		photo_image = ImageTk.PhotoImage(image=captured_image)
-
-		# Displaying photoimage in the label
-		label_widget.photo_image = photo_image
-
-		# Configure image in the label
-		label_widget.configure(image=photo_image)
-
-		app.update()
+    root.mainloop()
 
 
+if __name__ == "__main__":
+    t = Thread(ThreadStart(main))
+    t.ApartmentState = ApartmentState.STA
+    t.Start()
+    t.Join()
 
-# Create a button to open the camera in GUI app
-open_camera()
-
-
-
-w = Label(app, text="Gesture Password:", font=('Times 15'), pady=20)
-w.pack()
-
-
-# Create an infinite loop for displaying app on screen
-app.mainloop()
