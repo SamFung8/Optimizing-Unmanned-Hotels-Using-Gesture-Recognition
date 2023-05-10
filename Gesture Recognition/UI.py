@@ -13,7 +13,7 @@ def main():
 
     frame2 = WebView2(root, 500, 500)
     frame2.pack(side='right', padx=20, fill='both', expand=True)
-    frame2.load_url('https://google.com/')
+    frame2.load_url('./UI_html/index.html')
 
     app = WebView2(root, 500, 500)
     app.pack(side='left')
