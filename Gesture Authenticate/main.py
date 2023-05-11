@@ -1,62 +1,78 @@
+from tkinter import *
 import cv2
-import numpy as np
+from PIL import Image, ImageTk
 from cvzone.HandTrackingModule import HandDetector
-import keyboard
-import testController as test_v1
 
-# Capture from camera
-cap = cv2.VideoCapture(1)
-success, img = cap.read()
-scale_percent = 170 # percent of original size
-wCam = int(img.shape[1] * scale_percent / 100)
-hCam = int(img.shape[0] * scale_percent / 100)
-dim = (wCam, hCam)
-
+# Define a video capture object
+vid = cv2.VideoCapture(1)
 detector = HandDetector(detectionCon=0.7, maxHands=1)
 
-temp = []
+# Declare the width and height in variables
+width, height = 1000, 1200
+img_width, img_height = 800, 1000
 
-# function for video streaming
-while True:
+# Set the width and height
+vid.set(cv2.CAP_PROP_FRAME_WIDTH, img_width)
+vid.set(cv2.CAP_PROP_FRAME_HEIGHT, img_height)
 
-    success, img = cap.read()
-    img = cv2.flip(img, 1)
+# Create a GUI app
+app = Tk()
 
-    img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    hands, img = detector.findHands(img, flipType=False)
+# Set the size of the window
+app.geometry("1500x800")
 
-
-    if hands:
-        # Hand 1
-        hand1 = hands[0]
-        lmList1 = hand1["lmList"]  # List of 21 Landmark points
-
-        f1_x, f1_y = lmList1[8][0], lmList1[8][1]
-
-        fingers1 = detector.fingersUp(hand1)
-
-        if fingers1[1] == 1 and fingers1[2] == 0 and fingers1[0] == 1 and fingers1[3] == 0 and fingers1[4] == 0:
-            cv2.circle(img=img, center=(f1_x, f1_y), radius=20, color=(0, 255, 255))
-            temp.append([f1_x, f1_y])
-
-    cv2.imshow("Image", img)
+# Bind the app with Escape keyboard to
+# quit app whenever pressed
+app.bind('<Escape>', lambda e: app.quit())
 
 
-    if keyboard.is_pressed('q'):
-        print("ok, sayonnara")
-        height = img.shape[0]
-        width = img.shape[1]
-        test_v1.drawPoint(temp, (height, width))
-        test_v1.setAnser(temp)
-        test_v1.setcheck(temp)
-        exit()
-    elif keyboard.is_pressed('c'):
-        test_v1.checkSimilarity(temp)
-        height = img.shape[0]
-        width = img.shape[1]
-        test_v1.drawPoint(temp, (height, width))
-    elif keyboard.is_pressed('e'):
-        temp = []
+# Create a label and display it on app
+w = Label(app, text="Gesture Authenticate", font=('Times 25'), pady=20)
+w.pack()
+label_widget = Label(app, width=img_width, height=img_height)
+label_widget.pack(padx=20, fill='y', side='left')
 
-    cv2.waitKey(1)
+# Create a function to open camera and
+# display it in the label_widget on app
+def open_camera():
+	while True:
+		# Capture the video frame by frame
+		_, frame = vid.read()
+		hands, frame = detector.findHands(frame, flipType=False)
 
+		# Convert image from one color space to other
+		opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+
+		# Capture the latest frame and transform to image
+		captured_image = Image.fromarray(opencv_image)
+
+		# Convert captured image to photoimage
+		photo_image = ImageTk.PhotoImage(image=captured_image)
+
+		# Displaying photoimage in the label
+		label_widget.photo_image = photo_image
+
+		# Configure image in the label
+		label_widget.configure(image=photo_image)
+
+		app.update()
+
+
+# Create a button to open the camera in GUI app
+open_camera()
+
+img = cv2.imread('./UI_img/gesture.png', cv2.COLOR_BGR2RGBA)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
+img = cv2.resize(img, (500, 300))
+captured_image = Image.fromarray(img)
+photo_image = ImageTk.PhotoImage(image=captured_image)
+tk_img = ImageTk.PhotoImage(image=captured_image)    # 轉換為 tk 圖片物件
+label = Label(app, image=tk_img, width=500, height=300)  # 在 Lable 中放入圖片
+label.pack()
+
+w = Label(app, text="Gesture Password:", font=('Times 15'), pady=20)
+w.pack()
+
+
+# Create an infinite loop for displaying app on screen
+app.mainloop()

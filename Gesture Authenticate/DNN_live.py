@@ -65,7 +65,7 @@ def SVMTesting():
     x_testing = np.array(x_testing)
     #print(x_testing)
     #print(x_testing.shape)
-    print(str(loaded_model.predict_classes(x_testing)) + ' - ' + str(loaded_model.predict_proba(x_testing)))
+    print(str(loaded_model.predict_classes(x_testing)))
 
 
 

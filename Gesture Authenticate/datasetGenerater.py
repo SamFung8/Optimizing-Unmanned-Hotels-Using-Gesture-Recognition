@@ -28,7 +28,7 @@ if __name__=="__main__":
         hands, img = tracking(cap)
 
         if counter<=1000:
-            cv2.imwrite('./dataset/training/img/1_own/' + str(counter) + '.jpg', img)
+            cv2.imwrite('./dataset/training/img/0/' + str(counter) + '.jpg', img)
             counter += 1
             print(counter)
 

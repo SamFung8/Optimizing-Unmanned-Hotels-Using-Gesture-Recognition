@@ -1,101 +1,107 @@
 import csv
 import os
-
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
-data = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-#data = ['1', '2', '3', '4']
+data = ['0','1','2','3','4','5','6','7','8','9']
 point_data = []
-x_training = []
-y_training = []
+x_data = []
+y_data = []
+filename = 'gesture_model.keras'
 
 
-filename = 'raw_model.keras'
+def combineAllCSV():
+    os.remove('./dataset/training/CSV/All_Training_Data.csv')
+    with open('./dataset/training/CSV/All_Training_Data.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        temp = x_data
+        for i in range(0, len(y_data)):
+            writer.writerow(np.append(temp[i], y_data[i]))
 
 
 def loadCSVFile():
     for item in data:
-        with open('./dataset/training/CSV/raw_' + str(item) + '.csv', newline='') as csvfile:
+        with open('./dataset/training/CSV/' + str(item) + '.csv', newline='') as csvfile:
             spamreader = csv.reader(csvfile)
             for row in spamreader:
                 point_data.append(row)
-                y_training.append(item)
-
+                y_data.append(item)
     changeDataFormat()
 
 
 def changeDataFormat():
-    global x_training, y_training
+    global x_data, y_data
     for item in point_data:
         record = []
         for point in item:
             temp = point.split(', ')
             record.append(float(temp[0][1:]))
             record.append(float(temp[1][:-1]))
+        x_data.append(record)
 
-        x_training.append(record)
-    x_training = np.array(x_training)
-    y_training = np.array(y_training)
+    x_data = np.array(x_data)
+    y_data = np.array(y_data)
 
 
-def SVMModel():
-    print('Total number of data for training: ' + str(len(x_training)))
-    print(type(x_training[0][0]))
+def DNNNetwork():
+    network = Sequential()
+    network.add(Dense(42, input_shape=(x_data.shape[1],), activation='relu'))
+    network.add(Dropout(0.20))
+    network.add(Dense(30, activation='relu'))
+    network.add(Dropout(0.20))
+    network.add(Dense(20, activation='relu'))
+    network.add(Dropout(0.20))
+    network.add(Dense(10, activation='softmax'))
+    network.summary()
+    return network
 
-    # define the keras model
-    model = Sequential()
-    model.add(Dense(42, input_shape=(x_training.shape[1],), activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(32, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(22, activation='softmax'))
-    model.summary()
 
-    # compile the keras model
+def training():
+    print('Total number of data for training: ' + str(len(x_data)))
+    x_train, x_val, y_train, y_val = train_test_split(x_data, y_data, test_size=0.2, stratify=y_data)
+
+    model = DNNNetwork()
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    # fit the keras model on the dataset
-    history = model.fit(x_training, y_training, epochs=500, batch_size=50, validation_split=0.1)
+    history = model.fit(x_train, y_train, epochs=800, batch_size=100, validation_data=(x_val, y_val))
 
-    # 绘制训练 & 验证的准确率值
+    modelVisualization(history)
+    modelEvaluation(model)
+
+
+def modelVisualization(history):
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
+    plt.savefig('./model/DNN/Model_Accuracy.png')
     plt.show()
 
-    # 绘制训练 & 验证的损失值
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
     plt.title('Model loss')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
+    plt.savefig('./model/DNN/Model_Loss.png')
     plt.show()
 
 
-    # evaluate the keras model
-    _, accuracy = model.evaluate(x_training, y_training)
-    print('Accuracy: %.2f' % (accuracy * 100))
+def modelEvaluation(model):
+    _, accuracy = model.evaluate(x_data, y_data)
+    print('The model accuracy: %.2f' % (accuracy * 100))
     model.save('./model/DNN/' + filename)
 
 
-def saveALL():
-    os.remove('./dataset/training/CSV/allData.csv')
-    with open('./dataset/training/CSV/allData.csv', 'a', newline='') as f:
-        writer = csv.writer(f)
-        print(len(x_training))
-        temp = x_training
-        for i in range(0, len(y_training)):
-            writer.writerow(np.append(temp[i], y_training[i]))
 
 if __name__ == '__main__':
     loadCSVFile()
-    saveALL()
-    SVMModel()
+    combineAllCSV()
 
-    print('Training finished and saved the mode as: ' + './model/DNN/' + filename)
+    training()
+
+    print('Training finished and saved the mode at: ' + './model/DNN/' + filename)
