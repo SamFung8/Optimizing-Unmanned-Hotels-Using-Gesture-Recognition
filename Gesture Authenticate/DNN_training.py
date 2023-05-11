@@ -13,6 +13,11 @@ y_data = []
 filename = 'gesture_model.keras'
 
 
+trainingSetData = 10 * [0]
+valSetData = 10 * [0]
+
+
+
 def combineAllCSV():
     os.remove('./dataset/training/CSV/All_Training_Data.csv')
     with open('./dataset/training/CSV/All_Training_Data.csv', 'a', newline='') as f:
@@ -59,9 +64,23 @@ def DNNNetwork():
     return network
 
 
-def training():
+def dataSummaryInfo(y_train, y_val):
+    print('\n\n')
     print('Total number of data for training: ' + str(len(x_data)))
+    print('Training data and validation data summary:\n')
+    for i in y_train:
+        trainingSetData[int(i)] += 1
+    for i in y_val:
+        valSetData[int(i)] += 1
+    for item in data:
+        print('Training Set of class ' + str(item) + ' has ' + str(trainingSetData[int(item)]) + ' samples ')
+        print('Validation Set of class ' + str(item) + ' has ' + str(valSetData[int(item)]) + ' samples ')
+    print('\n\n')
+
+
+def training():
     x_train, x_val, y_train, y_val = train_test_split(x_data, y_data, test_size=0.2, stratify=y_data)
+    dataSummaryInfo(y_train, y_val)
 
     model = DNNNetwork()
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -104,4 +123,4 @@ if __name__ == '__main__':
 
     training()
 
-    print('Training finished and saved the mode at: ' + './model/DNN/' + filename)
+    print('Training finished and saved the model at: ' + './model/DNN/' + filename)

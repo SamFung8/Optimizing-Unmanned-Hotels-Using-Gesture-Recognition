@@ -16,7 +16,7 @@ def detect_hand(img):
 
 def getCSVfile():
     for item in data:
-        #os.remove('./dataset/training/CSV/' + str(item) + '.csv')
+        os.remove('./dataset/training/CSV/' + str(item) + '.csv')
         print('Extracting class ' + str(item) + ' images key point and save as CSV file at \'./dataset/training/CSV/' + str(item) + '.csv\'')
         for filename in os.listdir('./dataset/training/img/' + str(item) + '/'):
             img = cv2.imread('./dataset/training/img/' + str(item) + '/' + filename)
@@ -24,7 +24,7 @@ def getCSVfile():
             imgW, imgH = img.shape[0], img.shape[1]
 
             try:
-                with open('./dataset/training/CSV/' + str(item) + '.csv', 'a', newline='') as f:
+                with open('./dataset/training/CSV/' + str(item) + '.csv', 'a+', newline='') as f:
                     writer = csv.writer(f)
                     
                     for p in range(0, len(hands[0]['lmList'])):
