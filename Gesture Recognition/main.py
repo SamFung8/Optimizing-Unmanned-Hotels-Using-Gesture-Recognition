@@ -25,7 +25,7 @@ for i in range(len(createButtonList)):
 
 pyautogui.FAILSAFE = False
 displayFPS = cvzone.FPS()
-currentMode = 'keyboard'
+currentMode = 'mouse'
 changeModeCount = 100
 changeMouseClickCount = 50
 changeKeyboardClickCount = ["", 50]
@@ -55,7 +55,7 @@ def video_live():
     hands, img = detector.findHands(img, flipType=False)
 
     if currentMode == 'mouse':
-        mousePlanProportion = 0.30
+        mousePlanProportion = 0.15
         startPoint = ((int)(wCam * mousePlanProportion), (int)(hCam * mousePlanProportion))
         endPoint = ((int)(wCam * (1 - mousePlanProportion)), (int)(hCam * (1 - mousePlanProportion)))
         color = (255, 0, 0)
@@ -105,7 +105,6 @@ def video_live():
     else:
         for x in range(0, len(buttonController)):
             img = buttonController[x].draw(img)
-
 
         if hands:
             # Hand 1
