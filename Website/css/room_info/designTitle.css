@@ -1,0 +1,16 @@
+#title {
+  border: 1px solid;
+  background: linear-gradient(135deg, orange 60%, cyan);
+  text-align: center;
+  width:90%;
+  order: 2;
+  border-radius: 100px;
+  margin: auto;
+  color: Black;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-left: 10px;
+  font-size: 40px;
+  display: inline-block;
+  font-family: 'Lobster', serif;
+}

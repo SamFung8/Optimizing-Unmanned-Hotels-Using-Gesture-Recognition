@@ -1,0 +1,27 @@
+#productList {
+  margin-top: 20px;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+}
+
+#productList thead tr {
+  text-align: center;
+  font-size: 20px;
+  border: 3px #0089de groove;
+}
+
+#productList tbody td {
+  border-bottom: 2px solid #8ebf42;
+  text-align: center;
+  font-size: 18px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
