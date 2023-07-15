@@ -24,7 +24,7 @@ def main():
 
     frame2 = WebView2(canvas, 500, 500)
     frame2.pack(side='right', pady=80, padx=30, fill='both', expand=True)
-    frame2.load_url(os.path.join(os.getcwd() + '/UI_html/index.html'))
+    frame2.load_url('http://localhost/project_new/index_python.php')
 
     app = WebView2(canvas, 500, 500)
     app.pack(side='left', padx=30)
