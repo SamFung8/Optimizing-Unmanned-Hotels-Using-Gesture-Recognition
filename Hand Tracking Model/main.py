@@ -2,13 +2,10 @@ import cv2
 from cvzone.HandTrackingModule import HandDetector
 
 scale_percent = 170  # percent of original size
-
-cap = cv2.VideoCapture(1)
-
 detector = HandDetector(detectionCon=0.7, maxHands=1)
 
-while True:
 
+def tracking(cap):
     success, img = cap.read()
     img = cv2.flip(img, 1)
 
@@ -21,10 +18,14 @@ while True:
 
     hands, img = detector.findHands(img, flipType=False)
 
-    if hands:
-        hand1 = hands[0]
-        print(hand1)
-        lmList1 = hand1["lmList"]
+    return hands, img
 
-    cv2.imshow("Image", img)
-    cv2.waitKey(1)
+
+if __name__=="__main__":
+    cap = cv2.VideoCapture(1)
+
+    while True:
+        hands, img = tracking(cap)
+
+        cv2.imshow("Image", img)
+        cv2.waitKey(1)
