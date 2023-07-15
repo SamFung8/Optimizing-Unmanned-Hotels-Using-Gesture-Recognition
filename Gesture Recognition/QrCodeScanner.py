@@ -16,6 +16,7 @@ def video_live(cap, dim):
 def decoder(image):
     gray_img = cv2.cvtColor(image, 0)
     barcode = decode(gray_img)
+    barcodeData = None
 
     for obj in barcode:
         points = obj.polygon
@@ -31,4 +32,4 @@ def decoder(image):
         cv2.putText(image, string, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
         print("Barcode: " + barcodeData + " | Type: " + barcodeType)
 
-    return image
+    return image, barcodeData

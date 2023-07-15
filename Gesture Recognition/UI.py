@@ -37,10 +37,22 @@ def main():
     def open_camera():
         while True:
             # Convert image from one color space to other
-            if mode == 0:
-                opencv_image = c.video_live()
+
+            print(frame2.get_url())
+            if (frame2.get_url() is not None) :
+                if ("QRCode" in frame2.get_url()):
+                    opencv_image, infoID = s.video_live(c.cap, c.dim)
+                    if infoID is not None:
+                        frame2.load_url('http://localhost/project_new/bookingInfo_python.php?booking_id=' + infoID)
+                else:
+                    opencv_image = c.video_live()
             else:
-                opencv_image = s.video_live(c.cap, c.dim)
+                opencv_image = c.video_live()
+
+
+
+
+
 
             opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGBA)
             opencv_image = cv2.resize(opencv_image,
@@ -57,7 +69,6 @@ def main():
 
             # Configure image in the label
             label_widget.configure(image=photo_image)
-            print(frame2.get_url())
 
             app.update()
 
@@ -72,4 +83,4 @@ if __name__ == "__main__":
     t.ApartmentState = ApartmentState.STA
     t.Start()
     t.Join()
-
+ 

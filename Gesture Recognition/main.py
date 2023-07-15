@@ -30,7 +30,7 @@ changeModeCount = 100
 changeMouseClickCount = 50
 changeKeyboardClickCount = ["", 50]
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 success, img = cap.read()
 scale_percent = 170  # percent of original size
 wCam = int(img.shape[1] * scale_percent / 100)
@@ -54,6 +54,7 @@ def video_live():
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     hands, img = detector.findHands(img, flipType=False)
 
+
     if currentMode == 'mouse':
         mousePlanProportion = 0.15
         startPoint = ((int)(wCam * mousePlanProportion), (int)(hCam * mousePlanProportion))
@@ -64,7 +65,7 @@ def video_live():
         mousePlanBoxSizeW = (wCam * (1 - (mousePlanProportion * 2)))
         mousePlanBoxSizeH = (hCam * (1 - (mousePlanProportion * 2)))
 
-        if hands:
+        if hands and hands[0]['type'] == 'Right':
             # Hand 1
             hand1 = hands[0]
             lmList1 = hand1["lmList"]  # List of 21 Landmark points
@@ -102,11 +103,14 @@ def video_live():
                     if changeModeCount == 0:
                         currentMode = 'keyboard'
                         changeModeCount = 100
+        elif hands and hands[0]['type'] != 'Right':
+            cv2.putText(img, 'Please use your right hand!', (40, 300), cv2.FONT_HERSHEY_COMPLEX, 2,
+                        (0, 0, 255), 3)
     else:
         for x in range(0, len(buttonController)):
             img = buttonController[x].draw(img)
 
-        if hands:
+        if hands and hands[0]['type'] == 'Right':
             # Hand 1
             hand1 = hands[0]
             lmList1 = hand1["lmList"]  # List of 21 Landmark points
@@ -133,15 +137,14 @@ def video_live():
                         changeKeyboardClickCount[1] = 50
                         changeKeyboardClickCount[0] = buttonController[x].text
 
-
-
-
             if fingers1[1] == 1 and fingers1[2] == 1 and fingers1[0] == 0 and fingers1[3] == 1 and fingers1[4] == 1:
                 changeModeCount -= 1
                 if changeModeCount == 0:
                     currentMode = 'mouse'
                     changeModeCount = 100
-
+        elif hands and hands[0]['type'] != 'Right':
+            cv2.putText(img, 'Please use your right hand!', (40, 300), cv2.FONT_HERSHEY_COMPLEX, 2,
+                        (0, 0, 255), 3)
 
     showImg = img
 

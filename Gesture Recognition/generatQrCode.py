@@ -3,7 +3,7 @@ import sys
 import sendEmail as sender
 import time
 
-#print (sys.argv[1])
+print (sys.argv[1])
 data = sys.argv[1]
 print('Created the QR Code!')
 
