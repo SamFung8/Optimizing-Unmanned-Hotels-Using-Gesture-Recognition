@@ -35,24 +35,56 @@ label_widget.pack(padx=20, fill='y', side='left')
 
 # Create a function to open camera and
 # display it in the label_widget on app
+countTime = 80
+timer = countTime
+predictNum = -1
+password = []
+
 def open_camera():
+	global countTime,timer,predictNum,password
 	while True:
 		# Capture the video frame by frame
 		_, frame = vid.read()
 
 		img = frame
+		img = cv2.flip(img, 1)
 		wCam = img.shape[1]
 		hCam = img.shape[0]
 		dim = (wCam, hCam)
 		img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
 		dnnModel.setDim(wCam, hCam)
 		dnnHands, img = detector.findHands(img, flipType=False)
-		if dnnHands:
-			dnnModel.get_raw_data(dnnHands)
-			dnnModel.SVMTesting()
+		if dnnHands and dnnHands[0]['type'] == 'Right':
+			if dnnHands:
+				dnnModel.get_raw_data(dnnHands)
+				predict = dnnModel.SVMTesting()
+				img = cv2.putText(img, 'Predicted class: ' + predict, (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+									1, (255, 0, 0), 2, cv2.LINE_AA)
+				if predictNum == predict:
+					print('ok')
+					timer= timer - 1
+					if timer == 0:
+						password.append(predictNum)
+						timer = countTime
+				else:
+					predictNum = predict
+					timer = countTime
+			else:
+				img = cv2.putText(img, 'Predicted class: None', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+									1, (255, 0, 0), 2, cv2.LINE_AA)
+		elif dnnHands and dnnHands[0]['type'] != 'Right':
+			img = cv2.putText(img, 'Predicted class: None', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+							  1, (255, 0, 0), 2, cv2.LINE_AA)
+			cv2.putText(img, 'Please use your right hand!', (40, 300), cv2.FONT_HERSHEY_COMPLEX, 2,
+						(0, 0, 255), 3)
+		else:
+			img = cv2.putText(img, 'Predicted class: None', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+							  1, (255, 0, 0), 2, cv2.LINE_AA)
+
+		img = cv2.putText(img, 'Password: ' + str(password), (50, 90), cv2.FONT_HERSHEY_SIMPLEX,
+						  1, (255, 0, 0), 2, cv2.LINE_AA)
 
 		frame = img
-
 
 
 		# Convert image from one color space to other

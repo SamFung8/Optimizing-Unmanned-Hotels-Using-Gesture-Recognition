@@ -11,6 +11,7 @@ failProcess = 10 * [0]
 
 
 def detect_hand(img):
+    img = cv2.flip(img, 1)
     hands, img = detector.findHands(img, flipType=False)
     return hands, img
 

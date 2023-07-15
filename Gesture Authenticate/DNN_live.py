@@ -28,7 +28,7 @@ def tracking(cap):
     x_testing = []
 
     success, img = cap.read()
-    #img = cv2.flip(img, 1)
+    img = cv2.flip(img, 1)
 
     wCam = int(img.shape[1] * scale_percent / 100)
     hCam = int(img.shape[0] * scale_percent / 100)
@@ -72,7 +72,7 @@ def SVMTesting():
     #print(x_testing)
     #print(x_testing.shape)
     print(str(loaded_model.predict_classes(x_testing)))
-
+    return str(loaded_model.predict_classes(x_testing))
 
 
 if __name__ == '__main__':
