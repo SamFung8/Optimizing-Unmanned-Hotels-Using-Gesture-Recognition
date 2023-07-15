@@ -14,10 +14,13 @@ point_data = []
 x_testing = []
 
 # load the model from disk
-filename = 'raw_model.keras'
+filename = 'gesture_model.keras'
 loaded_model = keras.models.load_model('./model/DNN/' + filename)
 print(loaded_model)
 
+def setDim(wCam, hCam):
+    global dim
+    dim = (wCam, hCam)
 
 def tracking(cap):
     global dim, point_data, x_testing
@@ -25,7 +28,7 @@ def tracking(cap):
     x_testing = []
 
     success, img = cap.read()
-    img = cv2.flip(img, 1)
+    #img = cv2.flip(img, 1)
 
     wCam = int(img.shape[1] * scale_percent / 100)
     hCam = int(img.shape[0] * scale_percent / 100)
@@ -49,7 +52,10 @@ def changeDataFormat():
 
 
 def get_raw_data(hands):
-    global point_data
+    global dim, point_data, x_testing
+    point_data = []
+    x_testing = []
+
     for p in range(0, len(hands[0]['lmList'])):
         hands[0]['lmList'][p][0] = hands[0]['lmList'][p][0] / dim[0]
         hands[0]['lmList'][p][1] = hands[0]['lmList'][p][1] / dim[1]
@@ -70,7 +76,7 @@ def SVMTesting():
 
 
 if __name__ == '__main__':
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
     while True:
         hands, img = tracking(cap)

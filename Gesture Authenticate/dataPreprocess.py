@@ -21,7 +21,7 @@ def getCSVfile():
         for filename in os.listdir('./dataset/training/img/' + str(item) + '/'):
             img = cv2.imread('./dataset/training/img/' + str(item) + '/' + filename)
             hands, img = detect_hand(img)
-            imgW, imgH = img.shape[0], img.shape[1]
+            imgW, imgH = img.shape[1], img.shape[0]
 
             try:
                 with open('./dataset/training/CSV/' + str(item) + '.csv', 'a+', newline='') as f:

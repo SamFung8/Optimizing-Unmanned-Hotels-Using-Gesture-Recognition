@@ -79,7 +79,7 @@ def dataSummaryInfo(y_train, y_val):
 
 
 def training():
-    x_train, x_val, y_train, y_val = train_test_split(x_data, y_data, test_size=0.2, stratify=y_data)
+    x_train, x_val, y_train, y_val = train_test_split(x_data, y_data, test_size=0.4, stratify=y_data)
     dataSummaryInfo(y_train, y_val)
 
     model = DNNNetwork()

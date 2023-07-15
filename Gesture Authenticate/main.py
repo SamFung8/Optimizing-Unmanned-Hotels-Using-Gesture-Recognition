@@ -2,9 +2,10 @@ from tkinter import *
 import cv2
 from PIL import Image, ImageTk
 from cvzone.HandTrackingModule import HandDetector
+import DNN_live as dnnModel
 
 # Define a video capture object
-vid = cv2.VideoCapture(1)
+vid = cv2.VideoCapture(0)
 detector = HandDetector(detectionCon=0.7, maxHands=1)
 
 # Declare the width and height in variables
@@ -38,7 +39,21 @@ def open_camera():
 	while True:
 		# Capture the video frame by frame
 		_, frame = vid.read()
-		hands, frame = detector.findHands(frame, flipType=False)
+
+		img = frame
+		wCam = img.shape[1]
+		hCam = img.shape[0]
+		dim = (wCam, hCam)
+		img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+		dnnModel.setDim(wCam, hCam)
+		dnnHands, img = detector.findHands(img, flipType=False)
+		if dnnHands:
+			dnnModel.get_raw_data(dnnHands)
+			dnnModel.SVMTesting()
+
+		frame = img
+
+
 
 		# Convert image from one color space to other
 		opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
@@ -59,7 +74,7 @@ def open_camera():
 
 
 # Create a button to open the camera in GUI app
-open_camera()
+
 
 img = cv2.imread('./UI_img/gesture.png', cv2.COLOR_BGR2RGBA)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGBA)
@@ -73,6 +88,7 @@ label.pack()
 w = Label(app, text="Gesture Password:", font=('Times 15'), pady=20)
 w.pack()
 
+open_camera()
 
 # Create an infinite loop for displaying app on screen
 app.mainloop()
