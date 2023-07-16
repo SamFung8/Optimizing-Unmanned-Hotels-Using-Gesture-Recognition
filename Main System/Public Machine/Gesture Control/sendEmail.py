@@ -4,21 +4,23 @@ from email.mime.image import MIMEImage
 from pathlib import Path
 import smtplib
 
-def send():
-    content = MIMEMultipart()  # 建立MIMEMultipart物件
-    content["subject"] = "City Hotel Booking"  # 郵件標題
-    content["from"] = "fyptesting2023@gmail.com"  # 寄件者
-    content["to"] = "fungkingsh2@gmail.com"  # 收件者
+def send(address):
+    content = MIMEMultipart() 
+    content["subject"] = "City Hotel Booking"  
+    content["from"] = "fyptesting2023@gmail.com"  
+    content["to"] = address
     content.attach(MIMEText("Thank you for your reservation! \n\n"
-                            "A QR code is attached to this email. Please use this QR code to check in when using a public machine."))  # 郵件純文字內容
-    content.attach(MIMEImage(Path(r"C:\xampp\htdocs\project_new\booking_record.png").read_bytes()))  # 郵件圖片內容
+                            "A QR code is attached to this email. Please use this QR code to check in when using a public machine."))  
+    content.attach(MIMEImage(Path(r"./booking_record.png").read_bytes()))  
 
-    with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+    dome = address.split('@')[1]
+    with smtplib.SMTP(host="smtp."+dome, port="587") as smtp:  
         try:
-            smtp.ehlo()  # 驗證SMTP伺服器
-            smtp.starttls()  # 建立加密傳輸
-            smtp.login("fyptesting2023@gmail.com", "cqqcynngimhetfho")  # 登入寄件者gmail
-            smtp.send_message(content)  # 寄送郵件
+            smtp.ehlo() 
+            smtp.starttls()  
+            smtp.login("fyptesting2023@gmail.com", "cqqcynngimhetfho")  
+            smtp.send_message(content) 
             print("Complete!")
         except Exception as e:
             print("Error message: ", e)
+

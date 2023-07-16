@@ -27,7 +27,7 @@ def main():
 
     frame2 = WebView2(canvas, 500, 500)
     frame2.pack(side='right', pady=80, padx=30, fill='both', expand=True)
-    frame2.load_url('http://localhost/project_new/index_python.php')
+    frame2.load_url('http://localhost/Main%20System/PHP%20Website/index_python.php')
 
     app = WebView2(canvas, 500, 500)
     app.pack(side='left', padx=30)
@@ -46,11 +46,11 @@ def main():
                 if ("QRCode" in frame2.get_url()):
                     opencv_image, infoID = QRs.video_live(vc.cap, vc.dim)
                     if infoID is not None:
-                        frame2.load_url('http://localhost/project_new/bookingInfo_python.php?booking_id=' + infoID)
+                        frame2.load_url('http://localhost/Main%20System/PHP%20Website/bookingInfo_python.php?booking_id=' + infoID)
                 elif("authenticatePassword" in frame2.get_url()):
                     opencv_image, password = modelPredict.prediction(vc.cap, vc.dim)
                     if len(password) == 4:
-                        frame2.load_url('http://localhost/project_new/endPage_python.php')
+                        frame2.load_url('http://localhost/Main%20System/PHP%20Website/endPage_python.php')
                         f = open("PING.txt", "w")
                         f.writelines(password[0][1])
                         f.writelines(password[1][1])

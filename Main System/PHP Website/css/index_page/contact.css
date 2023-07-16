@@ -1,0 +1,70 @@
+/*format the contact */
+.contact {
+  top: 50%;
+  width: 100%;
+  text-align: center;
+}
+
+/*format the button*/
+.contact .btn {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: #f1f1f1;
+  margin: 20px;
+  border-radius: 30%;
+  box-shadow: 0 5px 15px -5px #00000070;
+  color: #3498db;
+  overflow: hidden;
+}
+
+/*format the button icon*/
+.contact .btn i {
+  line-height: 30px;
+  font-size: 26px;
+  transition: 0.2s linear;
+  margin-left: 3px;
+}
+
+/*if hover the button change the icon*/
+.contact .btn:hover i {
+  transform: scale(1.4);
+  color: #f1f1f1;
+}
+
+/*from hover to normal */
+.contact .btn::before {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  background: #3498db;
+  transform: rotate(45deg);
+  left: -110%;
+  top: 70%;
+}
+
+/*hover animation*/
+.contact .btn:hover::before {
+  animation: iconMove 0.7s 1;
+  top: -10%;
+  left: -10%;
+}
+
+/*create animation*/
+@keyframes iconMove {
+  0% {
+    left: -110%;
+    top: 70%;
+  }
+
+  50% {
+    left: 10%;
+    top: -30%;
+  }
+
+  100% {
+    top: -10%;
+    left: -10%;
+  }
+}

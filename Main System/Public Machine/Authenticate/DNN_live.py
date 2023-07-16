@@ -16,7 +16,7 @@ x_testing = []
 # load the model from disk
 global loaded_model
 filename = 'gesture_model.keras'
-loaded_model = keras.models.load_model('./Authenticate/model/DNN/' + filename)
+loaded_model = keras.models.load_model(('./Authenticate/model/DNN/' + filename))
 print(loaded_model)
 
 def setDim(wCam, hCam):
