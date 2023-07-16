@@ -28,7 +28,7 @@
   </tr>
   <tr>
     <td><h3>Finished the check-in</h3></td>
-    <td><a href="./index_python.php" class="button">Completed</a></td>
+    <td><a href="./start_python.php" class="button">Completed</a></td>
   </tr>
 </table>
 

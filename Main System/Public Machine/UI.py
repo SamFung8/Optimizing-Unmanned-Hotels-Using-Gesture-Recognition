@@ -27,7 +27,7 @@ def main():
 
     frame2 = WebView2(canvas, 500, 500)
     frame2.pack(side='right', pady=80, padx=30, fill='both', expand=True)
-    frame2.load_url('http://localhost/Main%20System/PHP%20Website/index_python.php')
+    frame2.load_url('http://localhost/Main%20System/PHP%20Website/start_python.php')
 
     app = WebView2(canvas, 500, 500)
     app.pack(side='left', padx=30)
