@@ -65,9 +65,6 @@ function showSearchBox() {
 
 
   <!--  the product list title-->
-  <div class="bg-page">
-    <img class="bg-page-image" src="./img/indexBG.jpg"></img>
-  </div>
 
   <div class="main" id="main">
     <a href="http://localhost/project_new/index.php">

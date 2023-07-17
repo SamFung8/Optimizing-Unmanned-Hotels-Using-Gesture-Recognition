@@ -33,7 +33,7 @@ def loadCSVFile():
             spamreader = csv.reader(csvfile)
             for row in spamreader:
                 point_data.append(row)
-                y_data.append(item)
+                y_data.append(int(item))
     changeDataFormat()
 
 
@@ -91,8 +91,8 @@ def training():
 
 
 def modelVisualization(history):
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
